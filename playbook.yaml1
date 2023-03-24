@@ -1,0 +1,21 @@
+- name: Install Nginx
+  hosts: all
+  tasks:
+    - name: update packages and install nginx
+    apt:
+      update_cache: yes
+      name: nginx
+      state: latest
+    register
+    - name: enable nginx
+    systemd:: output
+    until: output.stderr | length <=0
+    retries: 5
+    - name: enabled nginx
+      enabled: yes
+      state: started
+
+  - name: copy index.html to /var/www/html
+    copy:
+      src: index.html
+      dest: /var/www/html/index.html
