@@ -1,0 +1,34 @@
+---
+- name: Example playbook
+  hosts: all
+  vars:
+    app_name: myapp
+    app_version: 1.0
+  tasks:
+    - name: Ensure cronhttp server is running
+      service:
+        name: cron
+        state: started
+      become: true
+    - name: Copy application files
+      copy:
+        src: /etc/host.conf
+        dest: /home/fred/AKS-Terraform/workshop2/hostbbk.conf
+        mode: 0644
+      become: true
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+    - name: Ensure nginx server is running
+      service:
+        name: nginx
+        state: started
+      become: true
+    - name: restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
